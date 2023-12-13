@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:restaurant_app/pages/splash_screen.dart';
+import 'package:restaurant_app/pages/splash_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Restaurant App',
       theme: ThemeData(fontFamily: 'Poppins'),
-      home: const SplashScreen(),
+      home: const SplashPage(),
     );
   }
 }
