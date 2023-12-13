@@ -8,7 +8,8 @@ class Restaurant {
   final String pictureId;
   final String city;
   final double rating;
-  final Menus menus;
+  final List<Food> foods;
+  final List<Drink> drinks;
 
   Restaurant({
     required this.id,
@@ -17,10 +18,19 @@ class Restaurant {
     required this.pictureId,
     required this.city,
     required this.rating,
-    required this.menus,
+    required this.foods,
+    required this.drinks,
   });
 
   factory Restaurant.fromJson(Map<String, dynamic> json) {
+    List<Food> foodsList = (json['menus']['foods'] as List)
+        .map((food) => Food.fromJson(food))
+        .toList();
+
+    List<Drink> drinksList = (json['menus']['drinks'] as List)
+        .map((drink) => Drink.fromJson(drink))
+        .toList();
+
     return Restaurant(
       id: json['id'],
       name: json['name'],
@@ -28,28 +38,8 @@ class Restaurant {
       pictureId: json['pictureId'],
       city: json['city'],
       rating: json['rating'].toDouble(),
-      menus: Menus.fromJson(json['menus']),
-    );
-  }
-}
-
-class Menus {
-  final List<Food> foods;
-  final List<Drink> drinks;
-
-  Menus({
-    required this.foods,
-    required this.drinks,
-  });
-
-  factory Menus.fromJson(Map<String, dynamic> json) {
-    return Menus(
-      foods: (json['foods'] as List<dynamic>)
-          .map((food) => Food.fromJson(food))
-          .toList(),
-      drinks: (json['drinks'] as List<dynamic>)
-          .map((drink) => Drink.fromJson(drink))
-          .toList(),
+      foods: foodsList,
+      drinks: drinksList,
     );
   }
 }
@@ -79,9 +69,12 @@ class Drink {
 }
 
 class RestaurantService {
-  static Future<Map<String, dynamic>> fetchData() async {
+  static Future<List<Restaurant>> fetchData() async {
     String data =
         await rootBundle.loadString('assets/data/local_restaurant.json');
-    return json.decode(data);
+    final jsonData = json.decode(data)['restaurants'] as List<dynamic>;
+    List<Restaurant> restaurants =
+        jsonData.map((json) => Restaurant.fromJson(json)).toList();
+    return restaurants;
   }
 }

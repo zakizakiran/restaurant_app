@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:readmore/readmore.dart';
+import 'package:restaurant_app/models/restaurant_model.dart';
 
 class DetailRestaurantPage extends StatefulWidget {
-  final dynamic restaurant;
+  final Restaurant restaurant;
 
   const DetailRestaurantPage({super.key, required this.restaurant});
 
@@ -44,9 +45,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Hero(
-                  tag: widget.restaurant['pictureId'],
+                  tag: widget.restaurant.pictureId,
                   child: Image.network(
-                    widget.restaurant['pictureId'],
+                    widget.restaurant.pictureId,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -69,7 +70,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.restaurant['name'],
+                          widget.restaurant.name,
                           style: const TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
@@ -84,7 +85,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                               color: HexColor('F64363'),
                             ),
                             const SizedBox(width: 5.0),
-                            Text(widget.restaurant['city']),
+                            Text(widget.restaurant.city),
                           ],
                         ),
                         const SizedBox(height: 8.0),
@@ -96,7 +97,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                               color: Colors.amber,
                             ),
                             const SizedBox(width: 5.0),
-                            Text(widget.restaurant['rating'].toString())
+                            Text(widget.restaurant.rating.toString())
                           ],
                         ),
                       ],
@@ -116,7 +117,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                 ),
                 const SizedBox(height: 15.0),
                 ReadMoreText(
-                  widget.restaurant['description'],
+                  widget.restaurant.description,
                   trimLines: 5,
                   trimMode: TrimMode.Line,
                   trimCollapsedText: 'Read more',
@@ -158,9 +159,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                   height: MediaQuery.of(context).size.height / 10,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: widget.restaurant['menus']['foods'].length,
+                    itemCount: widget.restaurant.foods.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final food = widget.restaurant['menus']['foods'][index];
+                      final food = widget.restaurant.foods[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: SizedBox(
@@ -169,7 +170,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                             color: HexColor('F3E7E9'),
                             child: Center(
                               child: Text(
-                                food['name'],
+                                food.name,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: HexColor('F64363'),
@@ -205,9 +206,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                   height: MediaQuery.of(context).size.height / 10,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: widget.restaurant['menus']['drinks'].length,
+                    itemCount: widget.restaurant.drinks.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final drink = widget.restaurant['menus']['drinks'][index];
+                      final drink = widget.restaurant.drinks[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: SizedBox(
@@ -216,7 +217,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                             color: HexColor('F3E7E9'),
                             child: Center(
                               child: Text(
-                                drink['name'],
+                                drink.name,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12.0,
