@@ -4,26 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
-import 'package:restaurant_app/provider/restaurant_service.dart';
-
-class RestaurantDetailPage extends StatefulWidget {
-  const RestaurantDetailPage({super.key, required this.restaurantId});
-  final String restaurantId;
-
-  @override
-  State<RestaurantDetailPage> createState() => _RestaurantDetailPageState();
-}
-
-class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, WidgetRef ref, _) {
-        return Scaffold(body: RestaurantDetailWidget(id: widget.restaurantId));
-      },
-    );
-  }
-}
+import 'package:restaurant_app/provider/restaurant_provider.dart';
 
 class RestaurantDetailWidget extends ConsumerWidget {
   const RestaurantDetailWidget({super.key, required this.id});
@@ -271,8 +252,11 @@ class RestaurantDetailWidget extends ConsumerWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Center(child: Text('No Internet Connection')),
-              const SizedBox(height: 20),
+              Lottie.asset('assets/img/no-internet.json',
+                  width: MediaQuery.of(context).size.width / 2),
+              const SizedBox(height: 16.0),
+              const Center(child: Text('No internet connection')),
+              const SizedBox(height: 24.0),
               ElevatedButton(
                 onPressed: () {
                   // ignore: unused_result
@@ -288,139 +272,3 @@ class RestaurantDetailWidget extends ConsumerWidget {
     );
   }
 }
-
-
-// class DetailRestaurantPageApi extends StatelessWidget {
-//   final String restaurantId;
-
-//   DetailRestaurantPageApi({Key? key, required this.restaurantId})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer(
-//       builder: (context, WidgetRef ref, _) {
-//         AsyncValue<List<RestaurantDetail>> restaurantDetail =
-//             ref.watch(restaurantDetailProvider(restaurantId));
-
-//         return Scaffold(
-//             appBar: AppBar(
-//               surfaceTintColor: Colors.transparent,
-//               title: SvgPicture.asset('assets/img/logo.svg', width: 100),
-//             ),
-//             body: Column(
-//               children: [
-//                 restaurantDetail.when(
-//                   data: (data) {
-//                     return Text(data.map((e) => (e.name)).toString());
-//                   },
-//                   error: (error, stackTrace) {
-//                     if (error is Exception &&
-//                         error.toString().contains('No internet connection')) {
-//                       return Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           const Center(child: Text('No Internet Connection')),
-//                           const SizedBox(height: 20),
-//                           // ElevatedButton(
-//                           //   onPressed: () {
-//                           //     restaurantList.isLoading
-//                           //         ? Lottie.asset('assets/img/load.json')
-//                           //         // ignore: unused_result
-//                           //         : ref.refresh(searchController.text.isEmpty
-//                           //             ? restaurantListProvider
-//                           //             : restaurantSearchProvider(searchController.text));
-//                           //   },
-//                           //   child: const Text('Refresh'),
-//                           // ),
-//                         ],
-//                       );
-//                     }
-//                     return Center(child: Text('Error: $error'));
-//                   },
-//                   loading: () => Column(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       Lottie.asset('assets/img/load.json'),
-//                       const SizedBox(height: 8.0),
-//                       const Text('Please wait...'),
-//                     ],
-//                   ),
-//                 )
-//               ],
-//             ));
-//       },
-//     );
-//   }
-// }
-
-// Modify the RestaurantDetailWidget to handle a single RestaurantDetail
-// class DetailRestaurantPageApi extends StatelessWidget {
-//   final RestaurantDetail detail;
-
-//   const DetailRestaurantPageApi({super.key, required this.detail});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Restaurant Detail'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               detail.description,
-//               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 8),
-//             Text(
-//               detail.description,
-//               style: TextStyle(fontSize: 16),
-//             ),
-//             // Add other widgets to display other details
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class DetailRestaurantPageApi extends StatelessWidget {
-//   final RestaurantDetail detail;
-//   const DetailRestaurantPageApi({super.key, required this.detail});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer(builder: (context, WidgetRef ref, _) {
-//       final detailAsyncValue = ref.watch(restaurantDetailProvider(detail.id));
-//       return detailAsyncValue.when(
-//         loading: () => Center(child: CircularProgressIndicator()),
-//         error: (error, stackTrace) => Center(child: Text('Error: $error')),
-//         data: (detail) {
-//           // Tampilkan informasi detail restoran
-//           return Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   detail.na,
-//                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//                 ),
-//                 SizedBox(height: 8),
-//                 Text(
-//                   detail.description,
-//                   style: TextStyle(fontSize: 16),
-//                 ),
-//                 // Tambahkan widget lain untuk menampilkan informasi lainnya
-//               ],
-//             ),
-//           );
-//         },
-//       );
-//     });
-//   }
-// }
