@@ -6,6 +6,8 @@ import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 
+import '../custom/review_card.dart';
+
 class RestaurantDetailWidget extends ConsumerWidget {
   const RestaurantDetailWidget({super.key, required this.id});
   final String id;
@@ -58,10 +60,10 @@ class RestaurantDetailWidget extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 15.0),
+                const SizedBox(height: 16.0),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 20.0),
+                      horizontal: 16.0, vertical: 24.0),
                   child: Column(
                     children: [
                       Row(
@@ -77,7 +79,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
+                              const SizedBox(height: 8.0),
                               Row(
                                 children: [
                                   Icon(
@@ -85,7 +87,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                                     size: 15.0,
                                     color: HexColor('F64363'),
                                   ),
-                                  const SizedBox(width: 5.0),
+                                  const SizedBox(width: 4.0),
                                   Text(restaurant.city),
                                 ],
                               ),
@@ -97,11 +99,11 @@ class RestaurantDetailWidget extends ConsumerWidget {
                                     size: 15.0,
                                     color: Colors.amber,
                                   ),
-                                  const SizedBox(width: 5.0),
+                                  const SizedBox(width: 4.0),
                                   Text(restaurant.rating.toString())
                                 ],
                               ),
-                              const SizedBox(height: 15.0),
+                              const SizedBox(height: 16.0),
                             ],
                           ),
                         ],
@@ -130,9 +132,9 @@ class RestaurantDetailWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 50.0),
+                const SizedBox(height: 24.0),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -150,7 +152,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 8.0),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 10,
                   child: ListView.builder(
@@ -180,9 +182,9 @@ class RestaurantDetailWidget extends ConsumerWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 30.0),
+                const SizedBox(height: 40.0),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -200,7 +202,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 8.0),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 10,
                   child: ListView.builder(
@@ -230,7 +232,39 @@ class RestaurantDetailWidget extends ConsumerWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 40.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Review',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        Icons.reviews_outlined,
+                        color: HexColor('F64363'),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: restaurant.customerReviews.map((review) {
+                      return ReviewCard(
+                        review: review,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(height: 12.0),
               ],
             ),
           ),

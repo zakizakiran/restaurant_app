@@ -29,6 +29,7 @@ class RestaurantListPage extends StatelessWidget {
           child: Scaffold(
               appBar: AppBar(
                 surfaceTintColor: Colors.transparent,
+                centerTitle: true,
                 title: SvgPicture.asset('assets/img/logo.svg', width: 100),
               ),
               body: Column(
