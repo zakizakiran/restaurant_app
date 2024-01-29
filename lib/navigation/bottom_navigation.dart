@@ -53,6 +53,10 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
               icon: CupertinoIcons.heart_fill,
               text: 'Favorites',
             ),
+            const GButton(
+              icon: Icons.settings,
+              text: 'Settings',
+            ),
           ],
           selectedIndex: _selectedIndex,
           onTabChange: (index) {

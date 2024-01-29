@@ -4,9 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaurant_app/data/models/restaurant_model.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
-
-import '../widget/common/restaurant_list_widget.dart';
-import '../widget/custom/search_text_field_widget.dart';
+import 'package:restaurant_app/widget/common/restaurant_list_widget.dart';
+import 'package:restaurant_app/widget/custom/search_text_field_widget.dart';
 
 class RestaurantListPage extends StatelessWidget {
   const RestaurantListPage({super.key});
@@ -14,6 +13,7 @@ class RestaurantListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
+    // final NotificationHelper notificationHelper = NotificationHelper();
 
     return Consumer(
       builder: (context, WidgetRef ref, _) {

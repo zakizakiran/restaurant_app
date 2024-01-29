@@ -1,9 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_app/data/api/restaurant_api_service.dart';
 import 'package:restaurant_app/data/models/restaurant_detail_model.dart';
-
 import 'package:restaurant_app/data/models/restaurant_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:restaurant_app/helper/database_helper.dart';
 
 final restaurantListProvider = FutureProvider<List<Restaurant>>((ref) async {
   final apiService = RestaurantApiService();
@@ -34,24 +35,32 @@ final restaurantDetailProvider = FutureProvider.autoDispose
 final favoriteRestaurantsProvider =
     FutureProvider<List<Restaurant>>((ref) async {
   final apiService = RestaurantApiService();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String> favoriteIds =
-      prefs.getKeys().where((key) => prefs.getBool(key) ?? false).toList();
+  final dbHelper = DatabaseHelper.instance;
+  List<Map<String, dynamic>> favoriteRestaurantsData =
+      await dbHelper.getFavoriteRestaurants();
 
-  List<Restaurant> favoriteRestaurants = await Future.wait(
-    favoriteIds.map((id) async {
-      final restaurantDetail = await apiService.fetchRestaurantDetail(id);
+  List<Restaurant> favoriteRestaurants = [];
 
-      return Restaurant(
-        id: restaurantDetail.id,
-        name: restaurantDetail.name,
-        city: restaurantDetail.city,
-        description: restaurantDetail.description,
-        pictureId: restaurantDetail.pictureId,
-        rating: restaurantDetail.rating,
-      );
-    }),
-  );
+  try {
+    favoriteRestaurants = await Future.wait(
+      favoriteRestaurantsData.map((restaurantData) async {
+        final restaurantDetail =
+            await apiService.fetchRestaurantDetail(restaurantData['id']);
+
+        return Restaurant(
+          id: restaurantDetail.id,
+          name: restaurantDetail.name,
+          city: restaurantDetail.city,
+          description: restaurantDetail.description,
+          pictureId: restaurantDetail.pictureId,
+          rating: restaurantDetail.rating,
+        );
+      }),
+    );
+  } catch (error) {
+    // Handle error if needed, e.g., log the error
+    log('Error fetching favorite restaurant details: $error');
+  }
 
   return favoriteRestaurants;
 });

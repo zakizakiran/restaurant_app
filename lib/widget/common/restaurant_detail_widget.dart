@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
+import 'package:restaurant_app/helper/database_helper.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../custom/review_card.dart';
 
 class RestaurantDetailWidget extends ConsumerStatefulWidget {
@@ -19,35 +19,44 @@ class RestaurantDetailWidget extends ConsumerStatefulWidget {
 
 class _RestaurantDetailWidgetState
     extends ConsumerState<RestaurantDetailWidget> {
-  late SharedPreferences prefs;
+  late bool isFavorite;
 
   @override
   void initState() {
     super.initState();
-    initSharedPreferences();
+    initFavoriteStatus();
   }
 
-  Future<void> initSharedPreferences() async {
-    prefs = await SharedPreferences.getInstance();
+  Future<void> initFavoriteStatus() async {
+    isFavorite = await DatabaseHelper.instance.getFavoriteRestaurants().then(
+        (restaurants) =>
+            restaurants.any((restaurant) => restaurant['id'] == widget.id));
+    setState(() {});
   }
 
-  bool isFavorite(String restaurantId) {
-    return prefs.getBool(restaurantId) ?? false;
-  }
+  void toggleFavorite(String restaurantId) async {
+    final isCurrentlyFavorite = await DatabaseHelper.instance
+        .getFavoriteRestaurants()
+        .then((restaurants) =>
+            restaurants.any((restaurant) => restaurant['id'] == restaurantId));
 
-  void toggleFavorite(String restaurantId) {
-    // ignore: unused_result
-    ref.refresh(favoriteRestaurantsProvider);
-    setState(() {
-      bool isCurrentlyFavorite = isFavorite(restaurantId);
-      prefs.setBool(restaurantId, !isCurrentlyFavorite);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(isCurrentlyFavorite
-            ? 'Removed from Favorites'
-            : 'Added to Favorites'),
-        duration: const Duration(milliseconds: 500),
-      ));
-    });
+    if (isCurrentlyFavorite) {
+      await DatabaseHelper.instance.deleteFavoriteRestaurant(restaurantId);
+    } else {
+      await DatabaseHelper.instance.insertFavoriteRestaurant({
+        'id': restaurantId,
+      });
+    }
+
+    initFavoriteStatus();
+
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(isCurrentlyFavorite
+          ? 'Removed from Favorites'
+          : 'Added to Favorites'),
+      duration: const Duration(milliseconds: 500),
+    ));
   }
 
   @override
@@ -149,8 +158,10 @@ class _RestaurantDetailWidgetState
                           IconButton(
                             onPressed: () {
                               toggleFavorite(restaurant.id);
+                              // ignore: unused_result
+                              ref.refresh(favoriteRestaurantsProvider);
                             },
-                            icon: isFavorite(restaurant.id)
+                            icon: isFavorite
                                 ? const Icon(
                                     CupertinoIcons.heart_fill,
                                     color: Colors.redAccent,

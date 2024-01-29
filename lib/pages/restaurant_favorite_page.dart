@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
-import 'package:restaurant_app/widget/custom/restaurant_list_card.dart'; // Update with your actual path
+import 'package:restaurant_app/widget/custom/restaurant_list_card.dart';
 
 class FavoriteRestaurantsList extends ConsumerWidget {
   const FavoriteRestaurantsList({super.key});
