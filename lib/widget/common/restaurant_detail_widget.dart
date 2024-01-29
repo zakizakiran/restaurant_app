@@ -5,15 +5,55 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../custom/review_card.dart';
 
-class RestaurantDetailWidget extends ConsumerWidget {
+class RestaurantDetailWidget extends ConsumerStatefulWidget {
   const RestaurantDetailWidget({super.key, required this.id});
   final String id;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final restaurantDetailAsyncValue = ref.watch(restaurantDetailProvider(id));
+  // ignore: library_private_types_in_public_api
+  _RestaurantDetailWidgetState createState() => _RestaurantDetailWidgetState();
+}
+
+class _RestaurantDetailWidgetState
+    extends ConsumerState<RestaurantDetailWidget> {
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    initSharedPreferences();
+  }
+
+  Future<void> initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  bool isFavorite(String restaurantId) {
+    return prefs.getBool(restaurantId) ?? false;
+  }
+
+  void toggleFavorite(String restaurantId) {
+    // ignore: unused_result
+    ref.refresh(favoriteRestaurantsProvider);
+    setState(() {
+      bool isCurrentlyFavorite = isFavorite(restaurantId);
+      prefs.setBool(restaurantId, !isCurrentlyFavorite);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(isCurrentlyFavorite
+            ? 'Removed from Favorites'
+            : 'Added to Favorites'),
+        duration: const Duration(milliseconds: 500),
+      ));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final restaurantDetailAsyncValue =
+        ref.watch(restaurantDetailProvider(widget.id));
 
     return restaurantDetailAsyncValue.when(
       data: (restaurant) {
@@ -106,6 +146,20 @@ class RestaurantDetailWidget extends ConsumerWidget {
                               const SizedBox(height: 16.0),
                             ],
                           ),
+                          IconButton(
+                            onPressed: () {
+                              toggleFavorite(restaurant.id);
+                            },
+                            icon: isFavorite(restaurant.id)
+                                ? const Icon(
+                                    CupertinoIcons.heart_fill,
+                                    color: Colors.redAccent,
+                                  )
+                                : const Icon(
+                                    CupertinoIcons.heart,
+                                    color: Colors.redAccent,
+                                  ),
+                          ),
                         ],
                       ),
                       ReadMoreText(
@@ -148,7 +202,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                       Icon(
                         Icons.food_bank_outlined,
                         color: HexColor('F64363'),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -198,7 +252,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                       Icon(
                         Icons.wine_bar_outlined,
                         color: HexColor('F64363'),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -239,7 +293,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Review',
+                        'Reviews',
                         style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -248,7 +302,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
                       Icon(
                         Icons.reviews_outlined,
                         color: HexColor('F64363'),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -294,7 +348,7 @@ class RestaurantDetailWidget extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () {
                   // ignore: unused_result
-                  ref.refresh(restaurantDetailProvider(id));
+                  ref.refresh(restaurantDetailProvider(widget.id));
                 },
                 child: const Text('Refresh'),
               ),

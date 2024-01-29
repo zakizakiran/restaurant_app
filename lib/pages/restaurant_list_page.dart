@@ -27,21 +27,22 @@ class RestaurantListPage extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
           child: Scaffold(
-              appBar: AppBar(
-                surfaceTintColor: Colors.transparent,
-                centerTitle: true,
-                title: SvgPicture.asset('assets/img/logo.svg', width: 100),
-              ),
-              body: Column(
-                children: [
-                  SearchTextFieldWidget(
-                      searchController: searchController, ref: ref),
-                  Expanded(
-                    child: _buildRestaurant(
-                        context, restaurantList, ref, searchController),
-                  ),
-                ],
-              )),
+            appBar: AppBar(
+              surfaceTintColor: Colors.transparent,
+              centerTitle: true,
+              title: SvgPicture.asset('assets/img/logo.svg', width: 100),
+            ),
+            body: Column(
+              children: [
+                SearchTextFieldWidget(
+                    searchController: searchController, ref: ref),
+                Expanded(
+                  child: _buildRestaurant(
+                      context, restaurantList, ref, searchController),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

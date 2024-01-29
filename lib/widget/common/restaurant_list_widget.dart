@@ -9,14 +9,12 @@ class RestaurantListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          Restaurant restaurant = data[index];
-          return RestaurantListCard(restaurant: restaurant);
-        },
-      ),
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        Restaurant restaurant = data[index];
+        return RestaurantListCard(restaurant: restaurant);
+      },
     );
   }
 }
