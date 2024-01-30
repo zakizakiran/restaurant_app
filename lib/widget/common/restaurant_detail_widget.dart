@@ -49,6 +49,8 @@ class _RestaurantDetailWidgetState
     }
 
     initFavoriteStatus();
+    // ignore: unused_result
+    ref.refresh(favoriteRestaurantsProvider);
 
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -158,8 +160,6 @@ class _RestaurantDetailWidgetState
                           IconButton(
                             onPressed: () {
                               toggleFavorite(restaurant.id);
-                              // ignore: unused_result
-                              ref.refresh(favoriteRestaurantsProvider);
                             },
                             icon: isFavorite
                                 ? const Icon(
