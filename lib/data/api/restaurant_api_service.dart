@@ -7,9 +7,20 @@ import 'package:restaurant_app/data/models/restaurant_model.dart';
 class RestaurantApiService {
   static const String _baseUrl = 'https://restaurant-api.dicoding.dev';
 
+  http.Client httpClient = http.Client();
+
+  RestaurantApiService._privateConstructor();
+
+  static final RestaurantApiService _instance =
+      RestaurantApiService._privateConstructor();
+
+  factory RestaurantApiService() {
+    return _instance;
+  }
+
   Future<List<Restaurant>> fetchRestaurantList() async {
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/list'));
+      final response = await httpClient.get(Uri.parse('$_baseUrl/list'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
